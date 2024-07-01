@@ -22,3 +22,16 @@ print(layer2_ouput)
 
 
 
+relu
+
+inputs = [0, 2, -1, 3.3, -2.7, 1.1, 2.2, -100]
+ouput = []
+
+for i in inputs:
+    if i > 0:
+        ouput.append(i)
+    elif i <= 0:
+        ouput.append(0)
+
+
+
