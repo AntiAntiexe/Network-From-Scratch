@@ -1,37 +1,10 @@
-import numpy as np
-import matplotlib
+import math
 
-inputs = [[1, 2, 3, 2.5],
-          [2.0, 5.0, -1.0, 2.0],
-          [-1.5, 2.7, 3.3, -0.8]]
+softmax_output = [0.7, 0.1, 0.2]
+target_output = [1, 0, 0]
 
-weights = [[0.2, 0.8, -0.5, 1.0],
-           [0.5, -0.91, 0.26, -0.5],
-           [-0.26, -0.27, 0.17, 0.87]]
-biases = [2, 3, 0.5]
+loss = -(math.log(softmax_output[0])*target_output[0] +
+         math.log(softmax_output[1])*target_output[1] +
+         math.log(softmax_output[2])*target_output[2])
 
-weights2 = [[0.1, -0.14, 0.5],
-           [-0.5, 0.12, -0.33],
-           [-0.44, 0.73, -0.13]]
-biases2 = [-1, 2, -0.5]
-
-layer1_ouput = np.dot(inputs, np.array(weights).T) + biases
-layer2_ouput = np.dot(layer1_ouput, np.array(weights2).T) + biases2
-
-print(layer2_ouput)
-
-
-
-relu
-
-inputs = [0, 2, -1, 3.3, -2.7, 1.1, 2.2, -100]
-ouput = []
-
-for i in inputs:
-    if i > 0:
-        ouput.append(i)
-    elif i <= 0:
-        ouput.append(0)
-
-
-
+print(loss)
