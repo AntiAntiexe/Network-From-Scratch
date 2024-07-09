@@ -2,7 +2,7 @@ import numpy as np
 import nnfs
 from nnfs.datasets import spiral_data
 
-nnfs.init()
+nnfs.init() #Initialise the nnfs for ease of use
 
 '''
 Layer class defines the neural network architecture.
