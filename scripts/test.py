@@ -35,7 +35,7 @@ if len(y_true.shape) == 1:
 
 print(correct_confidences)'''
 
-
+'''
 softmax_output = np.array([[0.7, 0.1, 0.2],
                            [0.1, 0.5, 0.4],
                            [0.02, 0.9, 0.08]])
@@ -46,3 +46,16 @@ predictions = np.argmax(softmax_output, axis=1)
 accuracy = np.mean(predictions == class_targets)
 
 print(accuracy)
+'''
+
+
+import matplotlib.pyplot as plt
+import nnfs
+from nnfs.datasets import spiral_data
+
+nnfs.init()
+
+X, y = spiral_data(samples=100, classes=2)
+
+plt.scatter(X  [:, 0], X[:, 1], c=y, s=40, cmap='brg')
+plt.show()
