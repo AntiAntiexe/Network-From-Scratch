@@ -17,9 +17,13 @@ x2 = x1 + p2_delta
 y1 = f(x1)
 y2 = f(x2)
 
-print((x1,y1),(x2, y2))
 
-approx_deriv = (y2-y1)/(x2-x1)
+
+print('Cords for first tangent: ', (x1,y1),(x2, y2))
+
+approx_deriv = (y2 - y1) / (x2 - x1)
+
+
 
 b = y2  - approx_deriv*x2
 
