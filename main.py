@@ -80,7 +80,7 @@ class Loss_CategoricalCrossentropy(Loss):
 
 
 '''
-Create the neural network architecture.
+Create the neural network architecture by calling the functions and classes.
 '''
 
 X, y = spiral_data(samples= 100, classes=3) #Smaple Data of 300
