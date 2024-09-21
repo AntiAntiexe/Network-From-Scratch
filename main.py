@@ -65,7 +65,7 @@ class Activation_Softmax:
         self.dinputs = np.empty_like(dvalues)
 
         # Enumerate outputs and Gradients
-        for index, (single_output, single_dvalues) in enumerate(zip(self.output, dvalues)):
+        for index, (single_output, single_dvalues) in enumerate(zip(self.outputs, dvalues)):
             # Flatten output array
             single_output = single_output.reshape(-1, 1)
             # Calculate jacobian marric of the output
@@ -75,6 +75,38 @@ class Activation_Softmax:
             # Calculate sample-wise gradient
             # and add it to the array of sample gradients.
             self.dinputs[index] = np.dot(jacobian_matrix, single_dvalues)
+
+class Activation_Softmax_Loss_CategoricalCrossentropy():
+
+    # Creates activation and loss function objects
+    def __init__(self):
+        self.activation = Activation_Softmax()
+        self.loss = Loss_CategoricalCrossentropy()
+
+    # Forward pass
+    def forward(self, inputs, y_true):
+        # Outputs layer's activation function
+        self.activation.forward(inputs)
+        # Set the output
+        self.output = self.activation.output
+        # Calculate and retrun loss value
+        return self.loss.calculate(self.output, y_true)
+
+    def backward(self, dvalues, y_true):
+
+        # Number of samples
+        samples = len(dvalues)
+        # If labels are one-hot encoded,
+        # turn them into discrete values
+        if len(y_true.shape) == 2:
+            y_true = np.argmax(y_true, axis = 1 )
+
+        # Copy so we can safely modify
+        self.dinputs = dvalues.copy()
+        # Calculate gradient
+        self.dinputs[range(samples), y_true] -= 1
+        # Normalize gradient
+        self.dinputs = self.dinputs / samples
 
 
 '''
@@ -134,7 +166,7 @@ class Loss_CategoricalCrossentropy(Loss):
 '''
 Create the neural network architecture by calling the functions and classes.
 '''
-
+'''
 X, y = spiral_data(samples= 100, classes=3) #Smaple Data of 300
 
 dense1 = Layer_Dense(n_inputs=2, n_neurons=3) #use n_inputs of 2 as it is X, y data, you can use as many n_neurons
@@ -158,8 +190,28 @@ loss = loss_function.calculate(output=activation2.output, y=y) #the output of th
                                                                # spiral data
 
 print('Loss:', loss)
+'''
 
+softmax_outputs = np.array([[0.7, 1.0, 0.2],
+                            [0.1, 0.5, 0.4],
+                            [0.02, 0.9, 0.08]])
+class_targets = np.array([0, 1, 1])
 
+softmax_loss = Activation_Softmax_Loss_CategoricalCrossentropy()
+softmax_loss.backward(softmax_outputs, class_targets)
+dvalues1 = softmax_loss.dinputs
+
+activation = Activation_Softmax()
+activation.outputs = softmax_outputs
+loss = Loss_CategoricalCrossentropy()
+loss.backward(softmax_outputs, class_targets)
+activation.backward(loss.dinputs)
+dvalues2 = activation.dinputs
+
+print('Gradients: combined loss and activation: ')
+print(dvalues1)
+print('Gradients: spereate loss and activation: ')
+print(dvalues2)
 
 
 
