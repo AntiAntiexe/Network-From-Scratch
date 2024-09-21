@@ -1,45 +1,23 @@
-
-#Raw python
-'''import math
-
-layer_output = [4.8, 1.21, 2, 2.385]
-
-E = math.e
-
-exp_values = []
-
-for i in layer_output:
-    exp_values.append(E**i)
-
-norm_base = sum(exp_values)
-
-norm_values = []
-
-for val in exp_values:
-    norm_values.append(val/norm_base)
-
-print(norm_values)
-
-print(sum(norm_values))
-'''
-
-
-#Numpy
 import numpy as np
-import nnfs
-
-nnfs.init()
-
-layer_output = [[4.8, 1.21, 2.385],
-                [8.9, -1.81, 0.2],
-                [1.41, 1.051, 0.026]]
-
-exp_values = np.exp(layer_output)
-
-print(np.sum(layer_output, axis=1, keepdims=True))
-
-norm_values = exp_values / np.sum(exp_values, axis=1, keepdims=True)
-
-print(norm_values)
-
-#print(sum(norm_values))
+# Passed in gradient from the next layer
+# for the purpose of this example we're going to use
+# a vector of 1s
+dvalues = np.array([[ 1. , 1. , 1. ]])
+# We have 3 sets of weights - one set for each neuron
+# we have 4 inputs, thus 4 weights
+# recall that we keep weights transposed
+weights = np.array([[ 0.2 , 0.8 ,
+- 0.5 , 1 ],
+[ 0.5 ,
+- 0.91 , 0.26 ,
+- 0.5 ],
+[ - 0.26 ,
+- 0.27 , 0.17 , 0.87 ]]).T
+# sum weights of given input
+# and multiply by the passed in gradient for this neuron
+dx0 = sum (weights[ 0 ]) * dvalues[ 0 ]
+dx1 = sum (weights[ 1 ]) * dvalues[ 0 ]
+dx2 = sum (weights[ 2 ]) * dvalues[ 0 ]
+dx3 = sum (weights[ 3 ]) * dvalues[ 0 ]
+dinputs = np.array([dx0, dx1, dx2, dx3])
+print (dinputs)
