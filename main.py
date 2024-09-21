@@ -59,6 +59,24 @@ class Activation_Softmax:
         self.probabilities = self.exp_val / np.sum(self.exp_val, axis=1, keepdims=True)
         self.output = self.probabilities
 
+    def backward(self, dvalues):
+
+        # Create uninitialized array
+        self.dinputs = np.empty_like(dvalues)
+
+        # Enumerate outputs and Gradients
+        for index, (single_output, single_dvalues) in enumerate(zip(self.output, dvalues)):
+            # Flatten output array
+            single_output = single_output.reshape(-1, 1)
+            # Calculate jacobian marric of the output
+            jacobian_matrix = np.diagflat(single_output) - \
+                              np.dot(single_output, single_output.T)
+
+            # Calculate sample-wise gradient
+            # and add it to the array of sample gradients.
+            self.dinputs[index] = np.dot(jacobian_matrix, single_dvalues)
+
+
 '''
 Loss defines how "right" the neural network is
 '''
@@ -94,6 +112,23 @@ class Loss_CategoricalCrossentropy(Loss):
 
         negative_log_likelihoods = -np.log(correct_confidences)
         return negative_log_likelihoods
+    def backward(self, dvalues, y_true):
+
+        # Number of Samples
+        samples = len(dvalues)
+        # Number of labels in every sample
+        # We'll use the first sample to count them
+        labels = len(dvalues[0])
+
+        # if the bales are sparse, trun them into on hot vector
+        if len(y_true.shape) == 1:
+            y_true = np.eye(labels)[y_true]
+
+        # Calculate gradient
+        self.dinputs = -y_true * dvalues
+        # Normalize gradient
+        self.dinputs = self.dinputs / samples
+
 
 
 '''
