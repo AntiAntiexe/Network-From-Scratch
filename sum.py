@@ -1,4 +1,4 @@
-inputs = [1, 2, 3, 2.5]
+'''inputs = [1, 2, 3, 2.5]
 weights = [[0.2, 0.8, -0.5, 1],
            [0.5, -0.91, 0.26, -0.5],
            [-0.26, -0.27, 0.17, 0.87]]
@@ -21,4 +21,12 @@ for neuron_weights, neuron_bias in zip(weights, biases):
     #We then put the neuron out puts to a list of this layers outputs, so if there was a neuron after this one it can use these as the input.
     layer_outputs.append(neuron_output)
 
-print(layer_outputs)
+print(layer_outputs)'''
+
+import numpy as np
+
+inputs = [0, 2, -1, 3.3, -2.7, 1.1, 2.2, -100]
+output = np.maximum(0, inputs)
+
+
+print(output)
