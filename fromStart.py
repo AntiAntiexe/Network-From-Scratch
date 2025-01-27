@@ -5,10 +5,6 @@ from nnfs.datasets import spiral_data
 nnfs.init()
 np.random.seed(0)
 
-X = [[1, 2, 3, 2.5],
-    [2, 5, -1, 2],
-    [-1.5, 2.7, 3.3, -0.8]]
-
 X, y = spiral_data(100, 3)
 
 class Layer_Dense:
@@ -23,10 +19,23 @@ class Activation_ReLU:
         # Calculate output values from inputs
         self.output = np.maximum(0, inputs)
 
+class Activation_Softmax:
 
-layer1 = Layer_Dense(n_inputs=2, n_neurons=5)
+    def forward(self, inputs):
+        exp_values = np.exp(inputs - np.max(inputs, axis=1, keepdims=True))
+
+        probabilities = exp_values / np.sum(exp_values, axis=1, keepdims=True)
+
+        self.output = probabilities
+
+
+layer1 = Layer_Dense(n_inputs=2, n_neurons=3)
 activation1 = Activation_ReLU()
+layer2 = Layer_Dense(n_inputs=3, n_neurons=3)
+activation2 = Activation_Softmax()
 layer1.forward(X)
 activation1.forward(layer1.layer_output)
+layer2.forward(activation1.output)
+activation2.forward(layer2.layer_output)
 
-print(activation1.output)
+print(activation2.output[:5])
